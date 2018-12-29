@@ -1,0 +1,123 @@
+<html>
+
+<canvas style="background:black;" id="loader" width="500" height="500"></canvas>
+
+<script>
+
+
+function show_sliding_particles(canvas){
+  var canvas_w = canvas.width;
+  var canvas_h = canvas.height;
+  var canvas_w2 = Math.floor(canvas_w/2);
+  var canvas_h2 = Math.floor(canvas_h/2);
+  var ctx = canvas.getContext("2d");
+  ctx.translate(canvas_w2, canvas_h2);
+  ctx.scale(canvas_w/250, canvas_h/250);
+
+  var dots = [];
+  for (var i = 0; i <15; i++){
+    dots.push({
+      x: i * 20,
+      y: i * 10,
+      vx: 10*(Math.random())
+    });
+  }
+
+  for (var i = 0; i <15; i++){
+    dots.push({
+      x: -i * 20,
+      y: -i * 10,
+      vx: (3 + 10*(Math.random()))
+    });
+  }
+
+
+
+    return setInterval(function() {
+    // fade current image
+    ctx.save();
+    ctx.globalAlpha = .1;
+    ctx.fillStyle = "#000000";
+    ctx.fillRect(-canvas_w2, -canvas_h2, canvas_w, canvas_h);
+    ctx.restore();
+
+    // draw next step
+    ctx.save();
+    ctx.strokeStyle = "#ffffff";
+    for (var i=0; i<dots.length; i++) {
+      var dot = dots[i];
+
+      ctx.beginPath();
+      ctx.moveTo(dot.x, dot.y);
+
+      dot.x += dot.vx;
+      
+
+      ctx.lineTo(dot.x, dot.y);
+
+      if (dot.x > canvas_w2) {
+        dot.x = -canvas_w2;
+      }
+
+      ctx.stroke();
+    }
+    ctx.restore();
+  }, 33);
+
+}
+
+
+function show_loading_particles(canvas) {
+  var canvas_w = canvas.width;
+  var canvas_h = canvas.height;
+  var canvas_w2 = Math.floor(canvas_w/2);
+  var canvas_h2 = Math.floor(canvas_h/2);
+  var ctx = canvas.getContext("2d");
+  ctx.translate(canvas_w2, canvas_h2);
+  ctx.scale(canvas_w/250, canvas_h/250);
+
+  var dots = [];
+  for (var i=0; i<10; i++) {
+    dots.push({
+      x:canvas_w2 * (Math.random()-.5), y:canvas_h2 * (Math.random()-.5),
+      vx:30*(Math.random()-.5), vy:30*(Math.random()-.5),
+      ax:15*(Math.random()-.5), ay:15*(Math.random()-.5)
+    });
+  }
+
+  return setInterval(function() {
+    // fade current image
+    ctx.save();
+    ctx.globalAlpha = .1;
+    ctx.fillStyle = "#000000";
+    ctx.fillRect(-canvas_w2, -canvas_h2, canvas_w, canvas_h);
+    ctx.restore();
+
+    // draw next step
+    ctx.save();
+    ctx.strokeStyle = "#ffffff";
+    for (var i=0; i<dots.length; i++) {
+      var dot = dots[i];
+
+      ctx.beginPath();
+      ctx.moveTo(dot.x, dot.y);
+
+      var t = Math.atan2(dot.y, dot.x);
+      dot.ax = (dot.ax + (Math.random()-.5) - Math.cos(t)) * .9;
+      dot.ay = (dot.ay + (Math.random()-.5) - Math.sin(t)) * .9;
+      dot.vx = (dot.vx + dot.ax) * .75;
+      dot.vy = (dot.vy + dot.ay) * .75;
+      dot.x += dot.vx;
+      dot.y += dot.vy;
+
+      ctx.lineTo(dot.x, dot.y);
+      ctx.stroke();
+    }
+    ctx.restore();
+  }, 33);
+}
+
+show_sliding_particles(document.getElementById("loader"))
+
+</script>
+</html>
